@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sunshine.Dao.CustomerDaoMapper">
+  <select id="GetCustomerName" resultType="Customer">
+  		SELECT customer_id,cust_name from customers
+  </select>
+  <select id="findALLCustomerInfoRecord" parameterType="Customer" resultType="Customer">
+  	SELECT * from customers cu LEFT JOIN `user` us ON cu.user_id=us.user_id where 1=1
+	  	<if test="cust_name!=null and cust_name!=''">
+	  		and cu.cust_name like CONCAT(CONCAT('%',#{cust_name},'%'))
+	  	</if>
+	  	<if test="user_id!=null and user_id!=''">
+	  		and cu.user_id=#{user_id}
+	  	</if>
+	  	<if test="cust_background!=null and cust_background!=''">
+	  		and cu.cust_background=#{cust_background}
+	  	</if>
+	  	<if test="listed!=null and listed!=''">
+	  		and cu.listed=#{listed}
+	  	</if>
+	  	<if test="cust_type!=null and cust_type!=''">
+	  		and cu.cust_type=#{cust_type}
+	  	</if>
+	  	<if test="status!=null and status!=''">
+	  		and cu.status=#{status}
+	  	</if>
+  </select>
+  <select id="CountALLCustomerInfoRecord" parameterType="Customer" resultType="int">
+  		SELECT count(*) from customers cu LEFT JOIN `user` us ON cu.user_id=us.user_id where 1=1
+	  	<if test="cust_name!=null and cust_name!=''">
+	  		and cu.cust_name like CONCAT(CONCAT('%',#{cust_name},'%'))
+	  	</if>
+	  	<if test="user_id!=null and user_id!=''">
+	  		and cu.user_id=#{user_id}
+	  	</if>
+	  	<if test="cust_background!=null and cust_background!=''">
+	  		and cu.cust_background=#{cust_background}
+	  	</if>
+	  	<if test="listed!=null and listed!=''">
+	  		and cu.listed=#{listed}
+	  	</if>
+	  	<if test="cust_type!=null and cust_type!=''">
+	  		and cu.cust_type=#{cust_type}
+	  	</if>
+	  	<if test="status!=null and status!=''">
+	  		and cu.status=#{status}
+	  	</if>
+  </select>
+  <insert id="saveCustomerInfo" parameterType="Customer">
+  	insert into customers(cust_name,cust_type,cust_background,listed,reg_capital,
+  						  year_sales,entp_scale,tester_no,url,zip_code,address,
+  						  main_products,major_services,status,user_id,create_time)
+  	values(
+				  		#{cust_name},#{cust_type},#{cust_background},#{listed},#{reg_capital},
+				  		#{year_sales},#{entp_scale},#{tester_no},#{url},#{zip_code},#{address},
+				  		#{main_products},#{major_services},#{status},#{user_id},#{create_time}
+  	)
+  </insert>
+  <update id="updateCustomerInfo" parameterType="Customer">
+  	update customers
+  		<set>
+  			<if test="cust_name!=null and cust_name!=''">
+  				cust_name=#{cust_name},
+  			</if>
+  			<if test="cust_type!=null and cust_type!=''">
+  				cust_type=#{cust_type},
+  			</if>
+  			<if test="cust_background!=null and cust_background!=''">
+  				cust_background=#{cust_background},
+  			</if>
+  			<if test="listed!=null and listed!=''">
+  				listed=#{listed},
+  			</if>
+  			<if test="reg_capital!=null and reg_capital!=''">
+  				reg_capital=#{reg_capital},
+  			</if>
+  			<if test="year_sales!=null and year_sales!=''">
+  				year_sales=#{year_sales},
+  			</if>
+  			<if test="entp_scale!=null and entp_scale!=''">
+  				entp_scale=#{entp_scale},
+  			</if>
+  			<if test="tester_no!=null and tester_no!=''">
+  				tester_no=#{tester_no},
+  			</if>
+  			<if test="url!=null and url!=''">
+  				url=#{url},
+  			</if>
+  			<if test="zip_code!=null and zip_code!=''">
+  				zip_code=#{zip_code},
+  			</if>
+  			<if test="address!=null and address!=''">
+  				address=#{address},
+  			</if>
+  			<if test="main_products!=null and main_products!=''">
+  				main_products=#{main_products},
+  			</if>
+  			<if test="major_services!=null and major_services!=''">
+  				major_services=#{major_services},
+  			</if>
+  			<if test="status!=null and status!=''">
+  				status=#{status},
+  			</if>
+  			<if test="user_id!=null and user_id!=''">
+  				user_id=#{user_id},
+  			</if>
+  			<if test="create_time!=null">
+  				create_time=#{create_time},
+  			</if>
+  		</set>
+  			where customer_id=#{customer_id}
+  </update>
+  <delete id="deleteCustomerInfoRecord" parameterType="String">
+  	delete from customers where customer_id=#{customer_id}
+  </delete>
+  <update id="UpdateCustomerAssign" parameterType="Customer" >
+  	 update customers set user_id=#{user_id} where cust_name=#{cust_name}
+  </update>
+</mapper>

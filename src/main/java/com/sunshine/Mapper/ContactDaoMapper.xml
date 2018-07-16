@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sunshine.Dao.ContactDaoMapper">
+ <select id="getALLCustomerContacts" parameterType="Contact" resultType="Contact">
+ 	 SELECT * FROM contacts ct LEFT JOIN customers cu ON ct.cust_id=cu.customer_id WHERE 1=1
+ 	<if test="cust_name!=null and cust_name!=''">
+ 		and cu.cust_name like CONCAT(CONCAT('%',#{cust_name},'%'))
+ 	</if>
+ 	<if test="start_date!=null and start_date!='' and end_date!=null and end_date!=''">
+ 		and ct.create_time between #{start_date} and #{end_date}
+ 	</if>
+ </select>
+ <select id="CountALLCustomerContactsRecords" parameterType="Contact" resultType="int">
+ 	 SELECT count(*) FROM contacts ct LEFT JOIN customers cu ON ct.cust_id=cu.customer_id WHERE 1=1
+ 	<if test="cust_name!=null and cust_name!=''">
+ 		and cu.cust_name like CONCAT(CONCAT('%',#{cust_name},'%'))
+ 	</if>
+ 	<if test="start_date!=null and start_date!='' and end_date!=null and end_date!=''">
+ 		and ct.create_time between #{start_date} and #{end_date}
+ 	</if>
+ </select>
+ <insert id="saveCustomerContactInfo" parameterType="Contact">
+ 	insert into contacts(cust_id,cont_name,cont_dept,cont_position,cont_telephone,cont_mobile,
+ 						 cont_email,cont_qq,tech_degree,more_info,create_time)
+ 	 values(
+				 		 #{cust_id},#{cont_name},#{cont_dept},#{cont_position},#{cont_telephone},
+				 		 #{cont_mobile},#{cont_email},#{cont_qq},#{tech_degree},#{more_info},#{create_time}
+ 	 )
+ </insert>
+ <update id="updateCustomerContactInfo" parameterType="Contact">
+    update contacts
+ 	<set>
+ 		<if test="cust_id!=null and cust_id!=null">
+ 			cust_id=#{cust_id},
+ 		</if>
+ 		<if test="cont_name!=null and cont_name!=''">
+ 			cont_name=#{cont_name},
+ 		</if>
+ 		<if test="cont_dept!=null and cont_dept!=''">
+ 			cont_dept=#{cont_dept},
+ 		</if>
+ 		<if test="cont_position!=null and cont_position!=''">
+ 			cont_position=#{cont_position},
+ 		</if>
+ 		<if test="cont_telephone!=null and cont_telephone!=''">
+ 			cont_telephone=#{cont_telephone},
+ 		</if>
+ 		<if test="cont_mobile!=null and cont_mobile!=''">
+ 			cont_mobile=#{cont_mobile},
+ 		</if>
+ 		<if test="cont_email!=null and cont_email!=''">
+ 			cont_email=#{cont_email},
+ 		</if>
+ 		<if test="cont_qq!=null and cont_qq!=''">
+ 			cont_qq=#{cont_qq},
+ 		</if>
+ 		<if test="tech_degree!=null and tech_degree!=''">
+ 			tech_degree=#{tech_degree},
+ 		</if>
+ 		<if test="more_info!=null and more_info!=''">
+ 			more_info=#{more_info},
+ 		</if>
+ 		<if test="create_time!=null">
+ 			create_time=#{create_time},
+ 		</if>
+ 	</set>
+ 	 where cont_id=#{cont_id}
+ </update>
+ <delete id="deletCustomerContactInfo" parameterType="String">
+ 	delete from contacts where cont_id=#{cont_id}
+ </delete>
+</mapper>

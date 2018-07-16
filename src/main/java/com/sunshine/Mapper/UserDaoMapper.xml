@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sunshine.Dao.UserDaoMapper">
+	<select id="findALLUserList" parameterType="User" resultType="User">
+		select * from user where 1=1
+		<if test="user_name!=null and user_name!=''">
+			and user_name like CONCAT(CONCAT('%',#{user_name},'%'))
+		</if>
+		<if test="sex!=null and sex!=''">
+			and sex=#{sex}
+		</if>
+		<if test="role_id!=null and role_id!=''">
+			and role_id=#{role_id}
+		</if>
+		<if test="status!=null and status!=''">
+			and status=#{status}
+		</if>
+		<if test="end_date!=null and end_date!='' and star_tdate!=null and star_tdate!=''">
+			and birthday between #{star_tdate} and #{end_date}
+		</if>
+	</select>
+	
+	<select id="CountAllUserListRecords" parameterType="User" resultType="int">
+		select count(*) from user where 1=1
+		<if test="user_name!=null and user_name!=''">
+			and user_name like CONCAT(CONCAT('%',#{user_name},'%'))
+		</if>
+		<if test="sex!=null and sex!=''">
+			and sex=#{sex}
+		</if>
+		<if test="role_id!=null and role_id!=''">
+			and role_id=#{role_id}
+		</if>
+		<if test="status!=null and status!=''">
+			and status=#{status}
+		</if>
+		<if test="end_date!=null and end_date!='' and star_tdate!=null and star_tdate!=''">
+			and birthday between #{star_tdate} and #{end_date}
+		</if>
+	</select>
+	<insert id="saveUserRecord" parameterType="User">
+	   insert into user(user_name,password,sex,birthday,role_id,status,user_qq)
+	   values(#{user_name},#{password},#{sex},#{birthday},#{role_id},#{status},#{user_qq})
+	</insert>
+	<update id="updateUserRecord" parameterType="User">
+		update user 
+		<set>
+			<if test="user_name!=null and user_name!=''">
+				user_name=#{user_name},
+			</if>
+			<if test="sex!=null and sex!=''">
+				sex=#{sex},
+			</if>
+			<if test="birthday!=null">
+				birthday=#{birthday},
+			</if>
+			<if test="role_id!=null and role_id!=''">
+				role_id=#{role_id},
+			</if>
+			<if test="status!=null and status!=''">
+				status=#{status},
+			</if>
+			<if test="user_qq!=null and user_qq!=''">
+				user_qq=#{user_qq},
+			</if>
+		</set>
+		where user_id=#{user_id}
+	</update>
+	<delete id="deleteUSerRecord" parameterType="String">
+		delete from user where user_id=#{user_id}
+	</delete>
+	<select id="getUserInfoRecordById" parameterType="String" resultType="User">
+		select * from user where user_id=#{user_id}
+	</select>
+	<update id="UpdateUserPwd">
+		update user set password=#{password} where user_name=#{user_name}
+	</update>
+	<select id="getUserInfoRecordByName" parameterType="String" resultType="User">
+	   select * from user where user_name=#{user_name}
+	</select>
+	<select id="findALLUserListMap" resultType="User">
+		SELECT user_id,user_name from `user`
+	</select>
+	<select id="GetUserInfoRecordByNameAndPwd" resultType="User">
+		select * from user where user_name=#{user_name} and password=#{password}
+	</select>
+	<select id="findAllSaleUserList" resultType="User">
+		select * from user where role_id='3'
+	</select>
+</mapper>

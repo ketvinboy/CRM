@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sunshine.Dao.YudingDaoMapper">
+ 	<select id="getALLCustomerBookinfos" parameterType="Bookinfo" resultType="Bookinfo">
+ 		SELECT bk.book_id,bk.title,bk.destine_desc,bk.book_time,bk.create_time,bk.customer_id,bk.deal_state,cu.cust_name from 
+ 		bookinfo bk LEFT JOIN customers cu ON bk.customer_id=cu.customer_id where 1=1
+ 		<if test="cust_name!=null and cust_name!=''">
+ 			and cu.cust_name like CONCAT(CONCAT('%',#{cust_name},'%'))
+ 		</if>
+ 		<if test="Yuding_star_date!=null and Yuding_end_date!=null">
+ 			and bk.book_time between #{Yuding_star_date} and #{Yuding_end_date}
+ 		</if>
+ 		<if test="user_id!=null and user_id!=''">
+ 			and bk.user_id=#{user_id}
+ 		</if>
+ 		 ORDER BY bk.book_time ASC
+ 	</select>
+ 	<select id="CountALlCustomerBookInfos" parameterType="Bookinfo" resultType="int">
+ 		SELECT count(*) from bookinfo bk LEFT JOIN customers cu ON bk.customer_id=cu.customer_id where 1=1
+ 		<if test="cust_name!=null and cust_name!=''">
+ 			and cu.cust_name like CONCAT(CONCAT('%',#{cust_name},'%'))
+ 		</if>
+ 		<if test="Yuding_star_date!=null and Yuding_end_date!=null">
+ 			and bk.book_time between #{Yuding_star_date} and #{Yuding_end_date}
+ 		</if>
+ 		<if test="user_id!=null and user_id!=''">
+ 			and bk.user_id=#{user_id}
+ 		</if>
+ 		 ORDER BY bk.book_time ASC
+ 	</select>
+ 	<insert id="saveCustomerBookInfos" parameterType="Bookinfo">
+ 		insert into bookinfo(title,destine_desc,book_time,create_time,customer_id,deal_state,user_id)
+ 		values(#{title},#{destine_desc},#{book_time},#{create_time},#{customer_id},#{deal_state},#{user_id})
+ 	</insert>
+ 	<update id="updateCustomerBookInfos" parameterType="Bookinfo">
+ 		update bookinfo
+ 			<set>
+ 				<if test="title!=null and title!=''">
+ 					title=#{title},
+ 				</if>
+ 				<if test="destine_desc!=null and destine_desc!=''">
+ 					destine_desc=#{destine_desc},
+ 				</if>
+ 				<if test="book_time!=null">
+ 					book_time=#{book_time},
+ 				</if>
+ 				<if test="create_time!=null">
+ 					create_time=#{create_time},
+ 				</if>
+ 				<if test="customer_id!=null and customer_id!=''">
+ 					customer_id=#{customer_id},
+ 				</if>
+ 				<if test="deal_state!=null and deal_state!=''">
+ 					deal_state=#{deal_state},
+ 				</if>
+ 			</set>
+ 			where book_id=#{book_id}
+ 	</update>
+ 	<delete id="deleteCustomerBookInfos" parameterType="String">
+ 		delete from bookinfo where book_id=#{book_id}
+ 	</delete>
+ 	<select id="findCurrentYudingInfo" parameterType="java.sql.Date" resultType="Bookinfo">
+ 		SELECT * from bookinfo where book_time=#{book_time}
+ 	</select>
+ 	<select id="getBookcustomerInfo" parameterType="String" resultType="Bookinfo">
+ 		SELECT bk.title,cu.cust_name,us.user_qq,bk.book_time from 
+ 		bookinfo bk LEFT JOIN customers cu ON bk.customer_id=cu.customer_id 
+ 		LEFT JOIN `user` us ON cu.user_id=us.user_id where bk.book_id=#{book_id}
+ 	</select>
+</mapper>

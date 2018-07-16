@@ -1,0 +1,63 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+         
+		         <context:component-scan base-package="com.sunshine.Controller"></context:component-scan>
+		         <bean id="SpringApplicationContext" class="com.sunshine.Utils.ApplicationContextHelper"></bean>
+		         <!-- 添加注解驱动 -->
+				 <mvc:annotation-driven>
+		         <!-- 重新设置@RequestMapping中对@ResponseBody以String类型消息转换器的字符集 -->
+		        <mvc:message-converters register-defaults="true">
+		        <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+		            <constructor-arg value="UTF-8" />
+		        </bean>
+		        <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+		            <property name="supportedMediaTypes">
+		                <list>
+		                    <value>text/html;charset=UTF-8</value>
+		                    <value>application/json</value>
+		                    <value>application/xml;charset=UTF-8</value>
+		                </list>
+		            </property>
+		            <property name="dateFormat" value="yyyy-MM-dd"></property>      
+		            <property name="features">
+		                <list>
+		                    <!-- 默认的意思就是不配置这个属性，配置了就不是默认了 -->
+		                    <!-- 是否输出值为null的字段 ，默认是false-->              
+		                    <value>WriteMapNullValue</value>
+		                    <value>WriteNullNumberAsZero</value>
+		                    <value>WriteNullListAsEmpty</value>
+		                    <value>WriteNullStringAsEmpty</value>
+		                    <value>WriteNullBooleanAsFalse</value>
+		                    <value>WriteDateUseDateFormat</value>
+		                </list>
+		            </property>
+		        </bean>
+		    </mvc:message-converters>
+		</mvc:annotation-driven>
+ 
+       	 <mvc:resources location="/css/" mapping="/css/**"/>
+       	 <mvc:resources location="/images/" mapping="/images/**"/>
+       	 <mvc:resources location="/jquery-easyui-1.5.5.4/" mapping="/jquery-easyui-1.5.5.4/**"/>
+       	 <mvc:resources location="/js/" mapping="/js/**"/>
+       	 <mvc:resources location="/fonts/" mapping="/fonts/**"/>
+       	 
+       	 <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+       	 	<property name="prefix" value="/WEB-INF/"></property>
+       	 	<property name="suffix" value=".jsp"></property>
+       	 </bean>
+       	 
+       	 <bean id="multipartResolver" class="com.sunshine.Utils.CustomerMultipartyResolver">
+       	 	    <property name="defaultEncoding" value="UTF-8" />
+        	    <property name="maxUploadSize" value="502400000" />
+        	    <property name="maxInMemorySize" value="40960"></property>
+       	 </bean>
+       	 
+</beans>

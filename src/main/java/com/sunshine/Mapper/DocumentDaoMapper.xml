@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sunshine.Dao.DocumentDaoMapper">
+	<select id="findALLDocumentList" parameterType="Document" resultType="Document">
+		SELECT dc.doc_id,dc.user_id,dc.doc_title,dc.customer_id,dc.doc_type,dc.create_time,dc.doc_name,dc.doc_describe,cu.cust_name FROM document dc 
+		LEFT JOIN customers cu ON dc.customer_id=cu.customer_id where 1=1
+		<if test="user_id!=null and user_id!=''">
+			and dc.user_id=#{user_id}
+		</if>
+		<if test="cust_name!=null and cust_name!=''">
+			and cu.cust_name like CONCAT(CONCAT('%',#{cust_name},'%'))
+		</if>
+		<if test="doc_title!=null and doc_title!=''">
+			and dc.doc_title like CONCAT(CONCAT('%',#{doc_title},'%'))
+		</if>
+		<if test="doc_start_date!=null and doc_end_date!=null">
+			and dc.create_time between #{doc_start_date} and #{doc_end_date}
+		</if>
+		<if test="doc_type!=null and doc_type!=''">
+			and dc.doc_type=#{doc_type}
+		</if>
+	</select>
+	<select id="CountALLDocumentRecord" parameterType="Document" resultType="int">
+		SELECT count(*) FROM document dc 
+		LEFT JOIN customers cu ON dc.customer_id=cu.customer_id where 1=1
+		<if test="user_id!=null and user_id!=''">
+			and dc.user_id=#{user_id}
+		</if>
+		<if test="cust_name!=null and cust_name!=''">
+			and cu.cust_name=#{cust_name}
+		</if>
+		<if test="doc_title!=null and doc_title!=''">
+			and dc.doc_title=#{doc_title}
+		</if>
+		<if test="doc_start_date!=null and doc_end_date!=null">
+			and dc.create_time=#{create_time}
+		</if>
+		<if test="doc_type!=null and doc_type!=''">
+			and dc.doc_type=#{doc_type}
+		</if>
+	</select>
+	<insert id="Savedocument" parameterType="Document">
+		insert into document(doc_title,doc_type,customer_id,user_id,doc_path,create_time,doc_describe,doc_name)
+		values(#{doc_title},#{doc_type},#{customer_id},#{user_id},#{doc_path},#{create_time},#{doc_describe},#{doc_name})
+	</insert>
+	<update id="Updatedocument" parameterType="Document">
+		update document
+			<set>
+				<if test="user_id!=null and user_id!=''">
+					   user_id=#{user_id},
+				</if>			
+				<if test="doc_title!=null and doc_title!=''">
+					   doc_title=#{doc_title},
+				</if>
+				<if test="create_time!=null">
+					  create_time=#{create_time},
+				</if>
+				<if test="doc_type!=null and doc_type!=''">
+					  doc_type=#{doc_type},
+				</if>
+				<if test="customer_id!=null and customer_id!=''">
+					customer_id=#{customer_id},
+				</if>
+				<if test="doc_path!=null and doc_path!=''">
+					doc_path=#{doc_path},
+				</if>
+				<if test="doc_describe!=null and doc_describe!=''">
+					doc_describe=#{doc_describe},
+				</if>
+				<if test="doc_name!=null and doc_name!=''">
+					 doc_name=#{doc_name},
+				</if>
+			</set>
+			where doc_id=#{doc_id}
+	</update>
+	<delete id="deleteDocument" parameterType="String">
+		delete from document where doc_id=#{doc_id}
+	</delete>
+	<select id="GetCustomerDocumentById" parameterType="String" resultType="Document">
+		select * from  document where doc_id=#{doc_id}
+	</select>
+</mapper>

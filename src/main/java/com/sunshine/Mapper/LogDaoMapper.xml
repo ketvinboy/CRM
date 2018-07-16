@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sunshine.Dao.LogDaoMapper">
+	<select id="getALLLogRecordInfoList" parameterType="Logs" resultType="Logs">
+		SELECT lg.log_id,lg.log_title,lg.user_id,lg.cust_id,lg.log_desc,lg.create_time,cu.cust_name,us.user_name from `logs` lg 
+		LEFT JOIN customers cu ON lg.cust_id=cu.customer_id LEFT JOIN `user` us ON cu.user_id=us.user_id
+		where 1=1
+		<if test="cust_name!=null and cust_name!=''">
+			and cu.cust_name like CONCAT(CONCAT('%',#{cust_name},'%'))
+		</if>
+		<if test="log_start_date!=null and log_end_date!=''">
+			and lg.create_time between #{log_start_date} and #{log_end_date}
+		</if>
+	</select>
+	<select id="CountALLLogRecordInfos" parameterType="Logs" resultType="int">
+		SELECT count(*) from `logs` lg LEFT JOIN customers cu ON lg.cust_id=cu.customer_id 
+		LEFT JOIN `user` us ON cu.user_id=us.user_id
+		where 1=1
+		<if test="cust_name!=null and cust_name!=''">
+			and cu.cust_name like CONCAT(CONCAT('%',#{cust_name},'%'))
+		</if>
+		<if test="log_start_date!=null and log_end_date!=''">
+			and lg.create_time between #{log_start_date} and #{log_end_date}
+		</if>
+	</select>
+	<insert id="saveLogsRecord" parameterType="Logs">
+		insert into logs(log_title,log_desc,cust_id,create_time,user_id)
+		values(#{log_title},#{log_desc},#{cust_id},#{create_time},#{user_id})
+	</insert>
+	<update id="updateLogsRecord" parameterType="Logs">
+		update logs
+			<set>
+				<if test="log_title!=null and log_title!=''">
+					log_title=#{log_title},
+				</if>
+				<if test="log_desc!=null and log_desc!=''">
+					log_desc=#{log_desc},
+				</if>
+				<if test="cust_id!=null and cust_id!=''">
+					cust_id=#{cust_id},
+				</if>
+				<if test="create_time!=null">
+					create_time=#{create_time},
+				</if>
+			</set>
+			where log_id=#{log_id}
+	</update>
+	<delete id="deleteLogRecordInfo" parameterType="String">
+		delete from logs where log_id=#{log_id}
+	</delete>
+</mapper>
